@@ -1,8 +1,9 @@
 from fastapi import FastAPI, File, UploadFile, Form
+import pendulum
 import logging
 from pydantic import BaseModel
 import time
-
+import json
 from datetime import datetime
 import uuid
 import pymongo
@@ -34,7 +35,7 @@ class MongoConnector:
 
     def get_all(self, filter={}):
         db = self.client[self.base_database_key][self.sub_database_key]
-        return list(db.find(filter))
+        return list(db.find(filter,{"_id":0}))
 
     def update_item(self, filter_mongo, query):
         db = self.client[self.base_database_key][self.sub_database_key]
@@ -59,12 +60,14 @@ app = FastAPI()
 @app.get("/showdata/")
 async def show_data():
     data = connector.get_all()
-    return json.dumps(data)
+    return data
 
 
 @app.post("/submit_value/")
 async def schedulejob(item: Item):
     LOG.info('scheduling a Job')
     time.sleep(0.1)
-    connector.add_item({"sensor_name":item.sensor_name,"value":item.value})
+    connector.add_item({"sensor_name":item.sensor_name,
+			"value":item.value,
+                        "date":pendulum.now("UTC")})
     return "submitted"
