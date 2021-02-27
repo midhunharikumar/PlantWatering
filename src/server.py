@@ -59,7 +59,7 @@ app = FastAPI()
 @app.get("/showdata/")
 async def show_data():
     data = connector.get_all()
-    return data
+    return json.dumps(data)
 
 
 @app.post("/submit_value/")
