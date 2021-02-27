@@ -57,6 +57,7 @@ LOG.setLevel(logging.DEBUG)
 app = FastAPI()
 
 
+
 @app.get("/showdata/")
 async def show_data():
     data = connector.get_all()
