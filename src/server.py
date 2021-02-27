@@ -1,4 +1,4 @@
-from fastapi import FastAPI, File, UploadFile, Form
+from fastapi import BackgroundTasks,FastAPI, File, UploadFile, Form
 import pendulum
 import logging
 from pydantic import BaseModel
@@ -8,7 +8,7 @@ from datetime import datetime
 import uuid
 import pymongo
 import datetime
-
+import pywemo
 
 class MongoConnector:
     #(TODO) refactor all the customer code here
@@ -55,6 +55,20 @@ LOG.setLevel(logging.DEBUG)
 
 
 app = FastAPI()
+
+
+
+def motor_on(delay: int):
+    url = pywemo.setup_url_for_address("10.0.0.113", None)
+    device = pywemo.discovery.device_from_description(url)
+    device.on()
+    time.sleep(10)
+    device.off()
+
+@app.post("/run_motor/")
+async def run_motor(background_tasks: BackgroundTasks):
+    background_tasks.add_task(motor_on, 10)
+    return {"motor_toggled": "motor_toggled"}
 
 
 @app.get("/showdata/")
