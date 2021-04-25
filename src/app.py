@@ -7,11 +7,13 @@ import datetime
 import matplotlib
 import numpy as np
 import pendulum
+import os
 # import pywemo
 
+MONGO_ADDRESS = os.environ['MONGO_ADDRESS']
 
 def water_now():
-    url = "http://10.0.0.102:8000/run_motor/"
+    url = f"http://{MONGO_ADDRESS}/run_motor/"
     headers = {"accept": "application/json"}
 
     response = requests.post(url,headers=headers)
@@ -20,7 +22,7 @@ def water_now():
 
 
 def get_data():
-    url = "http://10.0.0.102:8000/showdata/"
+    url = f"http://{MONGO_ADDRESS}/showdata/"
     headers = {"accept": "application/json"}
     response = requests.get(url,headers=headers)
     return response.json()

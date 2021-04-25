@@ -6,15 +6,19 @@ import time
 import json
 from datetime import datetime
 import uuid
+import os
 import pymongo
 import datetime
 
+MONGO_CONTAINER = os.environ['MONGO_CONTAINER']
 
 class MongoConnector:
     #(TODO) refactor all the customer code here
 
-    def __init__(self, clientURL, base_db_key, sub_db_key):
-        self.client = pymongo.MongoClient()
+    def __init__(self, clientURL='localhost', base_db_key=None, sub_db_key=None):
+        self.client = pymongo.MongoClient(clientURL)
+        if base_db_key==None or sub_db_key== None:
+            print('Bad db name')
         self.base_database_key = base_db_key  # 'saheli-prime'
         self.sub_database_key = sub_db_key  # 'customer_info'
 
@@ -43,7 +47,7 @@ class MongoConnector:
 
 
 
-connector  = MongoConnector('localhost', 'jarvis', 'plant_status')
+connector  = MongoConnector(MONGO_CONTAINER, 'jarvis', 'plant_status')
 
 
 class Item(BaseModel):
@@ -55,8 +59,6 @@ LOG.setLevel(logging.DEBUG)
 
 
 app = FastAPI()
-
-
 
 @app.get("/showdata/")
 async def show_data():
