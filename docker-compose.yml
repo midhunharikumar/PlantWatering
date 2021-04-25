@@ -12,7 +12,7 @@ services:
         - 27017:27017
       restart: unless-stopped
     app:
-      image : midhunharikumar/plant-water
+      image : midhunharikumar/plant-watering
       container_name: streamlit-ui
       environment:
         - PUID=1000
