@@ -1,8 +1,8 @@
 build:
 	docker build -f Dockerfile -t streamlit .
-	docker tag streamlit:latest midhunharikumar/plant-water:latest
+	docker tag streamlit:latest midhunharikumar/plant-watering:latest
 push:
-	docker push midhunharikumar/plant-water:latest
+	docker push midhunharikumar/plant-watering:latest
 process:
 	docker-compose up -d
 stop:
